@@ -1,11 +1,13 @@
 import React,{Component} from 'react';
-import Books from './components/books';
+import Books from './books';
 import {Link} from 'react-router-dom';
+import {connect} from "react-redux"
 
 class BookShelf extends Component{
+    // state = {}
 
     render(){
-        const {books} = this.props;
+        const books = this.props.listBooks;
         const currentlyReading = books.filter((book) => book.shelf === "currentlyReading");
         const wantToRead = books.filter((book) => book.shelf === 'wantToRead');
         const read = books.filter((book) => book.shelf === "read")
@@ -21,7 +23,7 @@ class BookShelf extends Component{
                             {currentlyReading.length > 0 &&
                                 <Books  
                                         filteredBooks={currentlyReading}
-                                        changeShelf={this.props.changeShelf}
+                                        // changeShelf={this.props.changeShelf}
                                 />}
                         </div>
                         <div className="bookshelf">
@@ -29,7 +31,7 @@ class BookShelf extends Component{
                             {wantToRead.length > 0 &&
                                 <Books
                                     filteredBooks={wantToRead}
-                                    changeShelf={this.props.changeShelf}
+                                    // changeShelf={this.props.changeShelf}
                                 />}
                         </div>
                         <div className="bookshelf">
@@ -37,7 +39,7 @@ class BookShelf extends Component{
                             {read.length > 0 &&
                                 <Books
                                     filteredBooks={read}
-                                    changeShelf={this.props.changeShelf}
+                                    // changeShelf={this.props.changeShelf}
                                 />}
                         </div>
                     </div>
@@ -52,4 +54,10 @@ class BookShelf extends Component{
     }
 }
 
-export default BookShelf
+function mapStateToProps(state){
+    return{
+        listBooks: state.fetchBooks
+    }
+}
+
+export default connect(mapStateToProps)(BookShelf)

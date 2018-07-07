@@ -1,9 +1,11 @@
 import React,{Component} from 'react'
-import {Route } from "react-router-dom"
-import * as BooksAPI from './BooksAPI'
+// import * as BooksAPI from '../BooksAPI'
 import SearchBooks from './search'
 import BookShelf from './bookshelf';
-import './App.css'
+import {Route} from "react-router-dom"
+import '../App.css'
+import {connect} from "react-redux"
+ import {handleData} from "../actions/shared"
 
 
 class BooksApp extends Component{
@@ -12,31 +14,9 @@ class BooksApp extends Component{
     showSearchPage: true
   }
 
-  componentDidMount(){
-    BooksAPI.getAll()
-     .then((books) => {
-       this.setState({books})
-     })
+  componentDidMount() {
+    this.props.dispatch(handleData())
   }
-
-  changeShelf = (e, filteredBook) => {
-    const books = this.state.books;
-    const shelf = e.target.value;
-    filteredBook.shelf = e.target.value;
-    this.setState({
-      books
-    });
-
-    BooksAPI.update(filteredBook, shelf).then(() => {
-      this.setState(state => ({
-        books: state.books
-          .filter(b => b.id !== filteredBook.id)
-          .concat([filteredBook])
-      }));
-    });
-  };
-
-
 
   render(){
     
@@ -46,12 +26,9 @@ class BooksApp extends Component{
           exact
           path="/"
           render={() => (
-            <BookShelf
-              books={this.state.books}
-              changeShelf={this.changeShelf}
-            />
+            <BookShelf />
           )}
-        />
+        /> 
         <Route
           path="/search"
           render={() => (
@@ -62,8 +39,11 @@ class BooksApp extends Component{
           )}
         />
       </div>   
-       )
+      )
      }
    }
+
+
    
-   export default BooksApp
+
+export default connect()(BooksApp) 
